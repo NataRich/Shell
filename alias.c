@@ -34,7 +34,23 @@ t_arg* amap_find_arg(const t_amap* map, const char* key)
     return NULL;
 }
 
-void amap_add(t_amap* map, const char* key, const char** argv, unsigned int argc)
+void amap_print_all(const t_amap* map)
+{
+	for (unsigned int i = 0; i < map->size; i++)
+		info("%s %s\n", map->keys[i], map->values[i]);
+}
+
+void amap_print(const t_amap* map, const char* key)
+{
+	char* value = amap_find_value(map, key);
+	if (value != NULL)
+	{
+		info("%s %s\n", key, value);
+		free(value);
+	}
+}
+
+void amap_add(t_amap* map, const char* key, char** const argv, unsigned int argc)
 {
     for (unsigned int i = 0; i < 3; i ++)
     {

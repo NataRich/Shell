@@ -70,6 +70,30 @@ char* amap_find_value(const t_amap* map, const char* key);
 t_arg* amap_find_arg(const t_amap* map, const char* key);
 
 /**
+ * Prints all the aliases stored in the map.
+ *
+ * This function formats all the aliases and values in the form of
+ * `<name> <value>\n` and prints to the standard output.
+ *
+ * @param map The alias map structure that contains the information to be
+ *            printed.
+ */
+void amap_print_all(const t_amap* map);
+
+/**
+ * Prints the specific alias-value pair in the map.
+ *
+ * This function searches for the given key in the map. If found, it will print
+ * the alias-value pair to the standard output in the format of 
+ * `<name> <value>\n`. Otherwise, it does nothing.
+ *
+ * @param map The alias map structure that contains the information to be
+ *            printed.
+ * @param key The key to be searched for in the map.
+ */
+void amap_print(const t_amap* map, const char* key);
+
+/**
  * Adds the key-arg (value) pair to the map.
  *
  * This function first checks if the given key is allowed. If allowed, it adds
@@ -83,7 +107,7 @@ t_arg* amap_find_arg(const t_amap* map, const char* key);
  * @param argv The associated argument vector.
  * @param argc The number of arguments in the argument vector.
  */
-void amap_add(t_amap* map, const char* key, const char** argv, unsigned int argc);
+void amap_add(t_amap* map, const char* key, char** const argv, unsigned int argc);
 
 /**
  * Removes the key-arg (value) pair from the map.

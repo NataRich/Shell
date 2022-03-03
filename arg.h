@@ -31,10 +31,25 @@ t_arg* arg_init();
 
 /**
  * Clones an argument structure (dynamically allocated).
- * 
+ *
+ * This function deep-copies the given argument structure.
+ *
+ * @param arg The argument structure to be cloned.
  * @return A dynamically allocated deep copy of `t_arg` pointer.
  */
 t_arg* arg_clone(const t_arg* arg);
+
+/**
+ * Concatenates the argument vectors of `arg1` and `arg2` to produce a new
+ * argument structure (dynamically allocated). Importantly, this function does
+ * NOT copy the redirection file from any given argument structure, and it will
+ * ignore the first argument of `arg2` (i.e., the executable of `arg2`).
+ *
+ * @param arg1 The argument structure at the front.
+ * @param arg2 The argument structure at the back.
+ * @return A dynamically allocated deep copy of both `t_arg` pointers.
+ */
+t_arg* arg_cat(const t_arg* arg1, const t_arg* arg2);
 
 /**
  * Adds a new element to the argument vector.
@@ -73,6 +88,6 @@ void arg_free(t_arg* arg);
  * @param argc The number of arguments in the argument vector.
  * @return The string version of the given argument vector.
  */
-char* argv_to_str(const char** argv, unsigned int argc);
+char* argv_to_str(char** const argv, unsigned int argc);
 
 #endif

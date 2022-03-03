@@ -38,6 +38,21 @@ unsigned int len_fns();
 int is_redirected(const char* command);
 
 /**
+ * Checks if the redirection command has a valid from.
+ *
+ * This function checks if the command has '>' character at the beginning or
+ * the end of the string and if the number of '>' character is not 1. In above
+ * situations, it returns -1. Otherwise, it returns 0. Importantly, even if it
+ * returns 0, it is not guaranteed that the command is indeed a valid
+ * redirection. It is only guaranteed that the command has a valid form of a
+ * redirection.
+ *
+ * @param command The command line input.
+ * @return 0 if the given command is of a valid form, -1 otherwise.
+ */
+int is_valid_redir(const char* command);
+
+/**
  * Parses the command that doesn't involve redirection.
  *
  * This function treats only whitespaces as delimiters. It will store the

@@ -8,8 +8,6 @@
 #include "parse.h"
 #include "utils.h"
 
-// TODO: `mysh> exe >> output.txt` is invalid!!!!!!!
-
 const char* fns[] = { "alias", "unalias", "exit", NULL };
 
 void execute(const t_arg* arg, t_amap* map);
@@ -42,17 +40,14 @@ int main(int argc, char* argv[])
         if (arg != NULL) arg_free(arg);
         arg = arg_init();
 
-        info("mysh> ");
-        if (fgets(line, kBufferSize, fptr) == NULL)
-        {
-            info("\n");
-            break;
-        }
+        if (fptr == stdin) info("mysh> ");
+        if (fgets(line, kBufferSize, fptr) == NULL) break;
+        if (fptr != stdin) info("%s", line);
 
         line[strlen(line) - 1] = 0;
         parse(line, arg);
-        if (arg->argc == 0 || strncmp("exit", arg->argv[0], 5) == 0)
-            break;
+        if (arg->argc == 0) continue;
+        if (strncmp("exit", arg->argv[0], 5) == 0) break;
 
         execute(arg, map);
     } while (1);
@@ -114,10 +109,10 @@ void execute(const t_arg* arg, t_amap* map)
             }
             else
             {
-                t_arg* all = arg_cat(alias_arg, arg);
-                execv(all->argv[0], all->argv);
-                error("%s: Command not found.\n", all->argv[0]);
-                arg_free(all);
+                t_arg* comb = arg_cat(alias_arg, arg);
+                execv(comb->argv[0], comb->argv);
+                error("%s: Command not found.\n", comb->argv[0]);
+                arg_free(comb);
                 _exit(0);
             }
         }

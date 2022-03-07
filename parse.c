@@ -20,7 +20,11 @@ int is_valid_redir(const char* command)
 {
     unsigned int arrow_count = 0;
     unsigned int size = strlen(command) + 1;
+
+    // The minimum size for a valid redirection command is 4.
     if (size < 4) return -1;
+
+    // The first and last characters must not be '>'.
     if (command[0] == '>' || command[size - 2] == '>')
         return -1;
 
@@ -43,7 +47,7 @@ void parse_normal(const char* command, t_arg* arg)
 void parse_redirection(const char* command, t_arg* arg)
 {
     char* dup_cmd = strdup(command);
-    char* record = dup_cmd;
+    char* record = dup_cmd;  // record for free() later
     char* exe_cmd = strtok_r(dup_cmd, ">", &dup_cmd);
     char* redir = strtok_r(dup_cmd, ">", &dup_cmd);
     char* redir_file = strtok_r(redir, " \t", &redir);
@@ -53,7 +57,8 @@ void parse_redirection(const char* command, t_arg* arg)
     while ((token = strtok_r(redir, " \t", &redir)) && ++n_invalid) {}
 
     char* exe_test = strdup(exe_cmd);
-    char* exe_record = exe_test;
+    char* exe_record = exe_test;  // record for free() later
+    // Check for all whitespaces/tabs case
     token = strtok_r(exe_test, " \t", &exe_test);
     if (token == NULL || redir_file == NULL || n_invalid != 0)
         error("Redirection misformatted.\n");
@@ -70,6 +75,7 @@ void parse(const char* command, t_arg* arg)
 {
     char* dup_cmd = strdup(command);
     char* record = dup_cmd;
+    // Check for all whitespaces/tabs case
     char* exe = strtok_r(dup_cmd, " \t", &dup_cmd);
     if (exe == NULL)
     {

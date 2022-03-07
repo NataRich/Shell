@@ -40,21 +40,21 @@ void arg_add(t_arg* arg, const char* e)
     arg->argv = realloc(arg->argv, (arg->argc + 1) * sizeof(char*));
     if (arg->argv == NULL) exit(1);
 
-    unsigned int size = strlen(e) + 1;
-    arg->argv[arg->argc - 1] = strndup(e, size);
+    arg->argv[arg->argc - 1] = strdup(e);
     arg->argv[arg->argc] = NULL;
 }
 
 void arg_add_redir_file(t_arg* arg, const char* redir_file)
 {
-    unsigned int size = strlen(redir_file) + 1;
-    arg->redir_file = strndup(redir_file, size);
+    arg->redir_file = strdup(redir_file);
 }
 
 void arg_free(t_arg* arg)
 {
-    if (arg->redir_file != NULL) free(arg->redir_file);
-    for (unsigned int i = 0; i < arg->argc; i++) free(arg->argv[i]);
+    if (arg->redir_file != NULL)
+        free(arg->redir_file);
+    for (unsigned int i = 0; i < arg->argc; i++)
+        free(arg->argv[i]);
     free(arg->argv);
     free(arg);
     arg = NULL;
@@ -66,16 +66,26 @@ char* argv_to_str(char** const argv, unsigned int argc)
     for (unsigned int i = 0; i < argc; i++)
     {
         unsigned int total_size = 0;
-        if (str == NULL) total_size = strlen(argv[i]) + 1;
-        else total_size = strlen(str) + strlen(argv[i]) + 1;
-        if (i + 1 != argc) total_size += 1;
+        if (str == NULL)
+            total_size = strlen(argv[i]) + 1;
+        else
+            total_size = strlen(str) + strlen(argv[i]) + 1;
 
-        if (str == NULL) str = calloc(total_size, sizeof(char));
-        else str = realloc(str, total_size * sizeof(char));
+        // Additional space allocated for a whitespace
+        if (i + 1 != argc)
+            total_size += 1;
+
+        if (str == NULL)
+            str = calloc(total_size, sizeof(char));
+        else
+            str = realloc(str, total_size * sizeof(char));
         if (str == NULL) exit(1);
 
         strncat(str, argv[i], strlen(argv[i]));
-        if (i + 1 != argc) strncat(str, " ", 2);
+
+        // Add a whitespace in between two arguments
+        if (i + 1 != argc)
+            strncat(str, " ", 2);
     }
 
     return str;
